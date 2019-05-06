@@ -1,0 +1,154 @@
+---
+title: "Bulding_tidy_tools"
+author: "Jian"
+date: "06/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Attended a two days workshop which taught by Hadley Wickham early this month. 
+The workshop is around building tidy tools to automated repeated works. 
+
+here summrised 3 parts that I think could benefit our work. 
+in case of bias, please find the full materials [here]()
+
+## Shortcut keys are useful (for Rstudio users)
+
+This might not be true when people first try to memory so many shortcut keys. especially when point and click is so easy by the mouse. 
+However, it is a long term benefit. There are some cases, a shortcut key can be very helpful. Here is one example:
+
+Imaging you have a few group factors that are stored in column-wise in a excel sheet or in other format. 
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture1.PNG)
+
+Turn them into a vector manually can be painful. 
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture2.PNG)
+
+**[alt + drag]** in Rstudio can be useful. Press **alt** and then **drag down** with the mouse to trigger the multi-cursors. 
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture3.PNG)
+
+And then, edit the string as normal. 
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture4.PNG)
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture5.PNG)
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture6.PNG)
+
+
+Other shortcut keys you probably already know are:
+
+**[Ctrl + enter]** Run the selected line. 
+**[Ctrl + .]** **[Ctrl + O]** navigating files inside a R project. The first one is recommend because users only need to remember the file name if the file inside your R project.
+**[Ctrl + shift + N]** open a new file
+**[alt + Ctrl + K]** shortcut key reference page
+
+
+
+## Achieve something small first
+
+In the past, the definition of a R function for me was one function can at least do one or two jobs at once, such as reading data following a cleaning process Sometime, I even wrote a few hundred lines code to do the whole data analysis workflow. This is only because I was lucky enough to handle the consistent modelling data. However, it was extremely hard to come up with a good testing procedure to test the whole script. For a while, I convinced myself that I am the most dummy person in the world who cannot even figure out how to do unit testing on my own scripts. Now I realized that my mistakes were:
+  1. Misunderstood the idea of function programming;
+  2. Misunderstood the entire idea of unit testing.
+
+Try to achieve everything in one go is the ultimate idea but never is the first step. Function programming in R is a good example. The first step to write a function in R should be always making one single call working first. For instance, 
+```{r}
+unique(mtcars$cyl)
+```
+and then to identify the pattern by copying and pasting. 
+```{r, results='hide'}
+unique(mtcars$cyl)
+unique(mtcars$am)
+unique(mtcars$hp)
+```
+Finally, sick of copy and paste. the first `for` loop is born. 
+
+```{r, results='hide'}
+for (i in seq_len(length(mtcars))){
+  x <- unique(mtcars[[i]])
+  print(x)
+}
+
+```
+The `for` loop was working perfect fine for simple tasks till one day there is a large data set and lots of computation requires. Dr.Google suggests better use `*apply` or `map` rather than `for` loop in R. The code got upgraded. 
+
+```{r, results='hide'}
+lapply(mtcars, function(x) unique(x))
+purrr::map(mtcars, ~ unique(.x))
+```
+
+I just couldn't help myself to add more calls once I got familiar with this strategy. Thinking "wow, I can add a function call here to achieve more - that make sense". Things get complex when more functionalities added. It often turns out that I didn't achieve much by writing a giantic piece of code, only long waiting time to see output which always has suprises in it. For example, I wrote a script that reads, transforms, summarises and visulisie the modelling data all at one go. It broken easily when I just adjusted one parameter to change a colour of a point. The waiting time got longer and the logic got messer. 
+Complexcity shouldn't be the goal of functional programming in R, isntead, simplicity is. One thing I learned in this workship is simplify as much as you can for one function call. One R function should only achieve one thing at a time, and then use a bunch of functions to solve a complex issue. As a lego fun, I now would like to think each function (either customised or pre-defined) is a brick. I should use various bricks to **build** a object rather than using a giant brick to curve out a object. 
+
+Hadley said in the workshop "It is probably the sign you should break the code into smaller pieces if you can't write a simple unit testing to test it"
+
+Unit testing haunted me for at least a year till now. Now I finally realised that I am not the dummiest one. The only reason I couldn't test my script was because it is too long and too complicated. The script I tried to test is way beyond the coverage of unit testing since it is almost like a whole workflow testing. It is not impossible to do testing on the whole data analysis workflow. The chanllenges are the definition of the mimumun dataset for testing, dependencies of analysis method and variances in different projects. Some experters are looking into this area now, https://github.com/ropensci/rrrpkg. 
+
+For any R users, we probably do testing all the time. For example, checking function output in console, browsing data by calling `str` or `View`. Hoestley, all the codes we wrote probably can be called "test driven development". The only true different is human test is not reliable as machine automated testing, at least for me. A small example here. I probably just use the code below if I'd like to have a function that adds `1` everytime I pass an interger to it. 
+```{r dummy example, error=TRUE}
+add_one <- function(x) x + 1
+add_one(1)
+```
+It seems that the function just worked. I added another line to see the type of the output because I deseparately need an interger.  
+```{r}
+typeof(add_one(1))
+```
+NO. It is not an interger. So I probably need to go back and wrap the `x` and `1` by calling `as.interger`. Alternatively, I could do a real **Test driven development**.
+
+```{r, error=TRUE}
+library(testthat)
+expect_type(add_one(1), "integer")
+```
+
+Appreantly, it won;t work since we haven't define the function. Define the dummy version again for illustration. 
+
+```{r, error=TRUE}
+add_one <- function(x) x + 1
+expect_type(add_one(1), "integer")
+```
+
+The testing tells me that the type is `double`. So I could specific the type. 
+
+```{r dummy example continue, error=TRUE}
+
+add_one <- function(x) as.integer(x) + as.integer(1) # will be double if not define as integer.
+
+expect_type(add_one(2), "integer") # Return nothing means pass
+expect_equal(add_one(1), 2) 
+expect_error(add_one("a"), "x must be an integer") # Should be an error if x is a non interger value
+```
+
+The simple function does not report error. So I could modify it into a more robust stage.
+
+```{r}
+add_one <- function(x) {
+  stop(is.integer(x),
+      call. = FALSE,
+      "x must be an integer")
+  as.integer(x) + as.integer(1) 
+}
+expect_error(add_one("a"), "x must be an integer")
+
+
+```
+This process is called test driven development. As shown in the material `03-test`
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture3.PNG)
+
+The first couple of functions done by this strategy will probably painful since the back and forward from the actual function file to the testing file. Yes, the testing script is better to be separated with the actual function file and they are better to be stored in a package project. For more details about setting things up and do this process automatically, please refers to the materials or give a call. 
+
+Once we pass the fiddling starting stage, everything will be awesome. Achieve something small and then scale it up. 
+
+To visulise our achievement, use `devtools::test_coverage()` to find out how many tests have been down and the coverage of those tests.
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture8.PNG)
+
+![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture9.PNG)
+
+One important thing is the percentage coverage is not a goal to chase. It does not have to be 100% all the times. Time is too precious to be wasted on testing less important part. The recommendation is, therefore, running unit testing on the part of the code you believe can be problematic and confuse your future self. 
+
+## Tidy mind 
