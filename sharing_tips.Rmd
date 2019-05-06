@@ -137,9 +137,9 @@ expect_error(add_one("a"), "x must be an integer")
 ```
 This process is called test driven development. As shown in the material `03-test`
 
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture3.PNG)
+![Snapshot from the Material - `03-test`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture3.PNG)
 
-The first couple of functions done by this strategy will probably painful since the back and forward from the actual function file to the testing file. Yes, the testing script is better to be separated with the actual function file and they are better to be stored in a package project. For more details about setting things up and do this process automatically, please refers to the materials or give a call. 
+The first couple of functions done by this strategy will probably painful since the back and forward from the actual function file to the testing file. Yes, the testing script is better to be separated with the actual function file and they are better to be stored in a package project. For more details about setting things up and do this process automatically, please refers to the materials or give me a call. 
 
 Once we pass the fiddling starting stage, everything will be awesome. Achieve something small and then scale it up. 
 
@@ -151,4 +151,58 @@ To visulise our achievement, use `devtools::test_coverage()` to find out how man
 
 One important thing is the percentage coverage is not a goal to chase. It does not have to be 100% all the times. Time is too precious to be wasted on testing less important part. The recommendation is, therefore, running unit testing on the part of the code you believe can be problematic and confuse your future self. 
 
-## Tidy mind 
+## Be nice to yourself
+
+I hate my younger self more than anyone else. This is because two reasons:
+
+  1. He is an tight ass in terms of commenting the codes, either very few broken sentences or none words at all;
+  2. He made my life couldn't be harder because the inconsistences in his codes. 
+  
+To make my futrue life a bit easier, I believe that three improvement can be made:
+
+  1. Document the function that has been reused a lot;
+  2. Use meaningful names when writting functions;
+  3. Thinking carefully before damping times to develop a function that is already existing in the R community. 
+  
+Documenting R code is probably the most chanllenge part for me in the last 2.5 years. Even the simply strategy, commenting beside each line of code, seems so chanllegning. Sometime, I thought there would be no body else use this script anymore so why bother to put any comment. It turns out that I had to reuse the script a few weeks later and had to figure out why did I do this and that. Sometime, I was under pressure to get stuff done and didn't have time to put thoughtful words in the script. It turns out that I'm always holding this same excuse and bullying my future self by unexplained code. Sometimes, I just didn't know how to document the code because I didn't fully understand it myself. It turns out that the only chance to get to understand some complex functions is to document it well in my own words. 
+
+The most common documentation in R is probably commenting beside the code by using `#`. This is good for a quick solution and short term use functions. However, it might be a bit messy and confusing if the script gets too complex. For a long term benefit, using `roxygen2` package is an ideal solution. Documentation workflow 
+
+
+**`[Crtl + Alt + Shift + R]`** is the shortcut key to insert a Roxygen skeleton. The package has no built in help documentation because it contains no functions. The best place to understand the syntax and implemenataion is in [Hadley's book](http://r-pkgs.had.co.nz/man.html#roxygen-comments). 
+
+A simple example of documenting a function:
+```{r roxygen, results='hide', eval=FALSE}
+#' add_one
+#'
+#' @param x an interger
+#'
+#' @return interger(s)
+#' @export 
+#'
+#' @examples
+#' add_one(1)
+
+add_one <- function(x) {
+  stop(is.integer(x),
+      call. = FALSE,
+      "x must be an integer")
+  as.integer(x) + as.integer(1) 
+}
+```
+
+
+
+![Snapshot from the Material - `09-document`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture4.PNG)
+
+
+
+
+![Snapshot from the Material - `04-api-design`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture5.PNG)
+
+
+
+Why bother to spend heaps of time to develop something that is already existing and well deveoped. It might be sounds cool to develop everything on my own. However, there is a great cost on this, time. I am only an amture R programmer and R is a tool to help me understand the data. 
+
+
+I believe that the key of learning R is achieve something small everyday. Starting is always hard. I still remember the frustition that I first start to use R 
