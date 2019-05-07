@@ -1,20 +1,23 @@
 ---
 title: "Bulding_tidy_tools"
-author: "Jian"
+author: "Jian (AKA Frank)"
 date: "06/05/2019"
-output: html_document
+output:
+  word_document: 
+    toc: yes
+  html_document: 
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
 
-Attended a two days workshop which taught by Hadley Wickham early this month. 
-The workshop is around building tidy tools to automated repeated works. 
+I am very futunate to attended a two days workshop which taught by Hadley Wickham early this month. The workshop is around building tidy tools to automated repeated works. It was a hands on pratical workshop. However, in my opionion, the concept behind the tidy tools is building a tidy mind. A tidy mind to modulised all the critical part of a data analysis workflow, and clarify the necessary tools to achieve the goal in each module. Therefore, I believe the workshop can benefit our work no matter which level of R users you believe youselves are. In a way, we are all beginners to learn new tips and tricks. I summrised 3 parts that I think the most useful ones.In case of personal bias, please find the full materials [here](). 
 
-here summrised 3 parts that I think could benefit our work. 
-in case of bias, please find the full materials [here]()
+
 
 ## Shortcut keys are useful (for Rstudio users)
 
@@ -23,28 +26,32 @@ However, it is a long term benefit. There are some cases, a shortcut key can be 
 
 Imaging you have a few group factors that are stored in column-wise in a excel sheet or in other format. 
 
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture1.PNG)
+![_Demo_Step_1_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture1.PNG)
 
 Turn them into a vector manually can be painful. 
 
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture2.PNG)
+![_Demo_Step_2_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture2.PNG)
 
 **[alt + drag]** in Rstudio can be useful. Press **alt** and then **drag down** with the mouse to trigger the multi-cursors. 
 
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture3.PNG)
+![_Demo_Step_3_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture3.PNG)
 
 And then, edit the string as normal. 
 
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture4.PNG)
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture5.PNG)
-![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture6.PNG)
+![_Demo_Step_4_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture4.PNG)
 
+![_Demo_Step_5_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture5.PNG)
 
-Other shortcut keys you probably already know are:
+![_Demo_Step_6_](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture6.PNG)
+
+Other useful shortcut keys you probably already know are:
 
 **[Ctrl + enter]** Run the selected line. 
+
 **[Ctrl + .]** **[Ctrl + O]** navigating files inside a R project. The first one is recommend because users only need to remember the file name if the file inside your R project.
+
 **[Ctrl + shift + N]** open a new file
+
 **[alt + Ctrl + K]** shortcut key reference page
 
 
@@ -65,6 +72,7 @@ unique(mtcars$cyl)
 unique(mtcars$am)
 unique(mtcars$hp)
 ```
+
 Finally, sick of copy and paste. the first `for` loop is born. 
 
 ```{r, results='hide'}
@@ -74,6 +82,7 @@ for (i in seq_len(length(mtcars))){
 }
 
 ```
+
 The `for` loop was working perfect fine for simple tasks till one day there is a large data set and lots of computation requires. Dr.Google suggests better use `*apply` or `map` rather than `for` loop in R. The code got upgraded. 
 
 ```{r, results='hide'}
@@ -81,22 +90,26 @@ lapply(mtcars, function(x) unique(x))
 purrr::map(mtcars, ~ unique(.x))
 ```
 
-I just couldn't help myself to add more calls once I got familiar with this strategy. Thinking "wow, I can add a function call here to achieve more - that make sense". Things get complex when more functionalities added. It often turns out that I didn't achieve much by writing a giantic piece of code, only long waiting time to see output which always has suprises in it. For example, I wrote a script that reads, transforms, summarises and visulisie the modelling data all at one go. It broken easily when I just adjusted one parameter to change a colour of a point. The waiting time got longer and the logic got messer. 
+I just couldn't help myself to add more calls once I got familiar with this strategy. Thinking "wow, I can add a function call here to achieve more - that makes sense". Things get complicated quickly when more functionalities added. It often turns out that I didn't achieve much by writing a giantic piece of code, only long waiting time to see output which always has suprises in it. For example, I wrote a script that reads, transforms, summarises and visulisie the modelling data all at one go. It broken easily when I just adjusted one parameter to change a colour of a point. The waiting time got longer and the logic got messer. 
+
 Complexcity shouldn't be the goal of functional programming in R, isntead, simplicity is. One thing I learned in this workship is simplify as much as you can for one function call. One R function should only achieve one thing at a time, and then use a bunch of functions to solve a complex issue. As a lego fun, I now would like to think each function (either customised or pre-defined) is a brick. I should use various bricks to **build** a object rather than using a giant brick to curve out a object. 
 
-Hadley said in the workshop "It is probably the sign you should break the code into smaller pieces if you can't write a simple unit testing to test it"
+Hadley said in the workshop "It is probably the sign you should break the code into smaller pieces when you can't write a simple unit testing to test the code."
 
-Unit testing haunted me for at least a year till now. Now I finally realised that I am not the dummiest one. The only reason I couldn't test my script was because it is too long and too complicated. The script I tried to test is way beyond the coverage of unit testing since it is almost like a whole workflow testing. It is not impossible to do testing on the whole data analysis workflow. The chanllenges are the definition of the mimumun dataset for testing, dependencies of analysis method and variances in different projects. Some experters are looking into this area now, https://github.com/ropensci/rrrpkg. 
+Unit testing haunted me for at least a year till now. I finally realised that I am not the dummiest one. The only reason I couldn't test my script was because it is too long and too complicated. The script I tried to test is way beyond the coverage of unit testing since it is almost like a whole workflow testing. It is not impossible to do testing on the whole data analysis workflow. The chanllenges are the definition of the mimumun dataset for testing, dependencies of analysis method and variances in different projects. Some experters are looking into this space now, https://github.com/ropensci/rrrpkg. No ready-to-use tool yet.  
 
-For any R users, we probably do testing all the time. For example, checking function output in console, browsing data by calling `str` or `View`. Hoestley, all the codes we wrote probably can be called "test driven development". The only true different is human test is not reliable as machine automated testing, at least for me. A small example here. I probably just use the code below if I'd like to have a function that adds `1` everytime I pass an interger to it. 
+For any R users, we probably do testing all the time. For example, checking function output in console, browsing data by calling `str` or `View`. Hoenstley, all the codes we wrote probably can be called "**T**est **D**riven **D**evelopment"(TDD) since we need to make sure that the output on previous step is the one for next computation. The only true different is human test is error prone and might not as reliable as machine automated testing, at least for me. A small example here to illustrate human "TDD". Image I'd like to have a function that adds `1` everytime I pass an interger to it. The quickest and simpliest solution probably something like this:
 ```{r dummy example, error=TRUE}
 add_one <- function(x) x + 1
 add_one(1)
 ```
-It seems that the function just worked. I added another line to see the type of the output because I deseparately need an interger.  
+
+It seems that the function just worked. I added another line to see the type of the output because I deseparately need the output to be interger.  
+
 ```{r}
 typeof(add_one(1))
 ```
+
 NO. It is not an interger. So I probably need to go back and wrap the `x` and `1` by calling `as.interger`. Alternatively, I could do a real **Test driven development**.
 
 ```{r, error=TRUE}
@@ -104,7 +117,7 @@ library(testthat)
 expect_type(add_one(1), "integer")
 ```
 
-Appreantly, it won;t work since we haven't define the function. Define the dummy version again for illustration. 
+Appreantly, it won't work since I haven't define the function. Define the dummy version again for illustration. 
 
 ```{r, error=TRUE}
 add_one <- function(x) x + 1
@@ -135,9 +148,12 @@ expect_error(add_one("a"), "x must be an integer")
 
 
 ```
-This process is called test driven development. As shown in the material `03-test`
 
-![Snapshot from the Material - `03-test`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture3.PNG)
+Testing is everywhere whenever we use R to process data. Sometimes it is sufficient that testing the output by eyes in the console. For example, just want to check if the data structure layout. Sometimes a tested code can save lots of debugging time for the futrue. As the dummy TDD example shows, each step of the testing has been recorded, therefore, we know exactly what has been tested and do not need to waste time on checking the tested ones. Unit testing is not about predict all the possibilies in the future. I believe it is quite the opposite, recording the past. 
+
+Figure.1 shows the concept of unit testing. 
+
+![_Figure.1 Snapshot from the Material - `03-test`_](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture3.PNG)
 
 The first couple of functions done by this strategy will probably painful since the back and forward from the actual function file to the testing file. Yes, the testing script is better to be separated with the actual function file and they are better to be stored in a package project. For more details about setting things up and do this process automatically, please refers to the materials or give me a call. 
 
@@ -149,7 +165,7 @@ To visulise our achievement, use `devtools::test_coverage()` to find out how man
 
 ![](C:/Users/cflfcl/Desktop/mindbox/sharing/Capture9.PNG)
 
-One important thing is the percentage coverage is not a goal to chase. It does not have to be 100% all the times. Time is too precious to be wasted on testing less important part. The recommendation is, therefore, running unit testing on the part of the code you believe can be problematic and confuse your future self. 
+One important thing is the percentage coverage is not a goal to chase. It does not have to be 100% all the times. Time is too precious to be wasted on testing less important part. There is no golden answer to evulate which script is worth which one is not. It depends on the resusable value of the script which can only be figured out by time. I will definitely write unit testing for a function that I reused in multiply scripts. The code for a critical analysis should also be tested in order to have the exact same results for future run. Other suitations probably depends on personal choices. Have time in the weekend? Write some unit testings just for pratising. 
 
 ## Be nice to yourself
 
@@ -163,7 +179,9 @@ To make my futrue life a bit easier, I believe that three improvement can be mad
   1. Document the function that has been reused a lot;
   2. Use meaningful names when writting functions;
   3. Thinking carefully before damping times to develop a function that is already existing in the R community. 
-  
+
+### Improvenment one
+
 Documenting R code is probably the most chanllenge part for me in the last 2.5 years. Even the simply strategy, commenting beside each line of code, seems so chanllegning. Sometime, I thought there would be no body else use this script anymore so why bother to put any comment. It turns out that I had to reuse the script a few weeks later and had to figure out why did I do this and that. Sometime, I was under pressure to get stuff done and didn't have time to put thoughtful words in the script. It turns out that I'm always holding this same excuse and bullying my future self by unexplained code. Sometimes, I just didn't know how to document the code because I didn't fully understand it myself. It turns out that the only chance to get to understand some complex functions is to document it well in my own words. 
 
 The most common documentation in R is probably commenting beside the code by using `#`. This is good for a quick solution and short term use functions. However, it might be a bit messy and confusing if the script gets too complex. For a long term benefit, using `roxygen2` package is an ideal solution. Documentation workflow 
@@ -192,17 +210,25 @@ add_one <- function(x) {
 ```
 
 
+Figure 2 demonstrates the workflow of docomenting functions automaticlly. Full details can be found either in the materials or [the book](http://r-pkgs.had.co.nz/man.html#man-functions)
 
-![Snapshot from the Material - `09-document`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture4.PNG)
+![_Figure.2 Snapshot from the Material - `09-document`_](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture4.PNG)
+
+### Improvenment two
+
+Rstudio users can use the shortcut key **[Ctrl + .]** (Not working in powerplant version) to find the file without going through all the directories. This means that we only need to remember the file names that have the function or other files we need. Inconsistent and less informative names can be triky to memorise. For example, the base R function `regexpr` and `grepgexpr` are very diffcult to understand their functionalities till one look the help documentation in details. These functions are quite useful but perphas too creative for a non-programmer user. Thus, it will save the future self if one put a bit more thought on naming a function. Two suggestions from the workshop: 
+  
+  1. Use **verb** to name the function that `do` things;
+  2. Use **noun** to name intermidate product.
+
+### Improvenment three
+
+Why bother to spend heaps of time to develop something that is already existing and well deveoped. It might be sounds cool to develop everything on my own. However, there is a great cost on this, time. I am only an amture R programmer and I use R to help me understand the data. I have the intention to make R better but not now. 
+
+
+## Acknowledgement 
+
+Thanks a lot for the support from Linley, Paul, Edmar, Jo and Adrain. I couldn't get this far on my R jounery without your helps. 
 
 
 
-
-![Snapshot from the Material - `04-api-design`](C:/Users/cflfcl/Desktop/mindbox/sharing/Picture5.PNG)
-
-
-
-Why bother to spend heaps of time to develop something that is already existing and well deveoped. It might be sounds cool to develop everything on my own. However, there is a great cost on this, time. I am only an amture R programmer and R is a tool to help me understand the data. 
-
-
-I believe that the key of learning R is achieve something small everyday. Starting is always hard. I still remember the frustition that I first start to use R 
