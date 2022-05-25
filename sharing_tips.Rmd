@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-I am very futunate to attended a two days workshop which taught by Hadley Wickham early this month. The workshop is around building tidy tools to automated repeated works. It was a hands on pratical workshop. However, in my opionion, the concept behind the tidy tools is building a tidy mind. A tidy mind to modulised all the critical part of a data analysis workflow, and clarify the necessary tools to achieve the goal in each module. Therefore, I believe the workshop can benefit our work no matter which level of R users you believe youselves are. In a way, we are all beginners to learn new tips and tricks. I summrised 3 parts that I think the most useful ones.In case of personal bias, please find the full materials [here](). 
+I am very futunate to attended a two days workshop which taught by Hadley Wickham early this month. The workshop is around building tidy tools to automated repeated works. It was a hands on pratical workshop. However, in my opionion, the concept behind the tidy tools is building a tidy mind. A tidy mind to modulised all the critical part of a data analysis workflow, and clarify the necessary tools to achieve the goal in each module. Therefore, I believe the workshop can benefit our work no matter which level of R users you believe youselves are. In a way, we are all beginners to learn new tips and tricks. I summrised 3 parts that I think the most useful ones.In case of personal bias, please find the full materials [here](rstd.io/tidytools19). 
 
 
 
